@@ -53,3 +53,5 @@ We have structured this workshop using the [4C model](https://www.bowperson.com/
 - [Concepts](docs/concepts.md)
 - [Concrete Practice](docs/concrete-practice.md)
 - [Conclusion](docs/conclusion.md)
+
+## Camp Photo
