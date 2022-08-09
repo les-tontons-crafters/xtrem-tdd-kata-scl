@@ -8,30 +8,34 @@ import java.util.Map;
 public class Portfolio {
     private final Map<Currency, List<Double>> moneys = new EnumMap<>(Currency.class);
 
-
-    public void addMoney(Double amount, Currency currency) {
-        List<Double> amounts = new ArrayList<>();
-        amounts.add(amount);
-        moneys.put(currency, amounts);
+    public void add(double amount, Currency currency) {
+        moneys.compute(currency, (c, amounts) -> {
+            if (amounts == null) {
+                amounts = new ArrayList<>();
+            }
+            amounts.add(amount);
+            return amounts;
+        });
     }
 
-    public Double evaluate(Currency currency, Bank bank) {
-        Double res = 0d;
+    public double evaluate(Bank bank, Currency toCurrency) throws MissingExchangeRatesException {
+        var convertedResult = 0d;
+        var missingExchangeRates = new ArrayList<MissingExchangeRateException>();
 
-        for (var money : moneys.entrySet()) {
-            if (money.getKey() == currency) {
-                res += money.getValue().stream().mapToDouble(x -> x).sum();
-            } else {
-                res += money.getValue().stream().mapToDouble(x -> {
-                    try {
-                        return bank.convert(x, money.getKey(), currency);
-                    } catch (MissingExchangeRateException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).sum();
+        for (Map.Entry<Currency, List<Double>> entry : moneys.entrySet()) {
+            for (Double amount : entry.getValue()) {
+                try {
+                    var convertedAmount = bank.convert(amount, entry.getKey(), toCurrency);
+                    convertedResult += convertedAmount;
+                } catch (MissingExchangeRateException missingExchangeRateException) {
+                    missingExchangeRates.add(missingExchangeRateException);
+                }
             }
-
         }
-        return res;
+
+        if (!missingExchangeRates.isEmpty()) {
+            throw new MissingExchangeRatesException(missingExchangeRates);
+        }
+        return convertedResult;
     }
 }
