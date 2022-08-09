@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FluentAssertions;
 using money_problem.Domain;
 using Xunit;
@@ -31,9 +32,10 @@ public class PortfolioShould
 
 public class Portfolio
 {
-    public void Add(double amount, Currency usd)
+    private Dictionary<Currency, double> exchangesRates = new();
+    public void Add(double amount, Currency currency)
     {
-        
+        exchangesRates.Add(currency, amount);
     }
 
     public double Evaluate(Currency currency, Bank bank)
