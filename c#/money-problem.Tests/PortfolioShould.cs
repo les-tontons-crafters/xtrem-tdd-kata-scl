@@ -28,6 +28,17 @@ public class PortfolioShould
         
         portfolio.Evaluate(Currency.KRW, bank).Should().Be(2200);
     }
+
+    [Fact(DisplayName = "1usd + 1100 usd = 1101 usd")]
+    public void Evaluate_Should_Return_1101Krw_Given_1Usd_And_1100Usd()
+    {
+        var bank = Bank.WithExchangeRate(Currency.USD, Currency.USD, 1);
+        var portfolio = new Portfolio();
+        portfolio.Add(1, Currency.USD);
+        portfolio.Add(1100, Currency.USD);
+
+        portfolio.Evaluate(Currency.USD, bank).Should().Be(1101);
+    }
 }
 
 public class Portfolio
@@ -35,11 +46,24 @@ public class Portfolio
     private Dictionary<Currency, double> exchangesRates = new();
     public void Add(double amount, Currency currency)
     {
-        exchangesRates.Add(currency, amount);
+        if (exchangesRates.ContainsKey(currency))
+        {
+            exchangesRates[currency] += amount;
+        }
+        else
+        {
+            exchangesRates.Add(currency, amount);
+        }
     }
 
     public double Evaluate(Currency currency, Bank bank)
     {
-        return currency == Currency.KRW ? 2200 : 17;
+        double rtnVal = 0;
+        foreach (var exchangesRate in exchangesRates)
+        {
+            rtnVal += bank.Convert(exchangesRate.Value, exchangesRate.Key, currency);
+        }
+
+        return rtnVal;
     }
 }
