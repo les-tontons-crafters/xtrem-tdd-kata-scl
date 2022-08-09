@@ -10,7 +10,7 @@ namespace money_problem.Tests
         [Fact(DisplayName = "5 USD + 10 USD = 15 USD")]
         public void AddInUsd()
         {
-            double? result = MoneyCalculator.Add(5, USD, 10);
+            double? result = MoneyCalculator.Add(new Money(5, USD), 10);
             result.Should()
                 .Be(15);
         }
@@ -19,7 +19,7 @@ namespace money_problem.Tests
         public void MultiplyInEuros()
         {
             MoneyCalculator
-                .Times(10, EUR, 2)
+                .Times(new Money(10, EUR), 2)
                 .Should()
                 .Be(20d);
         }
@@ -28,7 +28,7 @@ namespace money_problem.Tests
         public void DivideInKoreanWons()
         {
             MoneyCalculator
-                .Divide(4002, KRW, 4)
+                .Divide(new Money(4002, KRW), 4)
                 .Should()
                 .Be(1000.5d);
         }
