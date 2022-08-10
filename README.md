@@ -59,6 +59,66 @@ We have structured this workshop using the [4C model](https://www.bowperson.com/
 <table>
 <tr>
     <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/aderri>
+            <img src=https://avatars.githubusercontent.com/u/8045766?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=aderri/>
+            <br />
+            <sub style="font-size:14px"><b>aderri</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/arthur112>
+            <img src=https://avatars.githubusercontent.com/u/33544640?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=arthur112/>
+            <br />
+            <sub style="font-size:14px"><b>arthur112</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/fgo-repo>
+            <img src=https://avatars.githubusercontent.com/u/28492310?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Fabrice/>
+            <br />
+            <sub style="font-size:14px"><b>Fabrice</b></sub>
+        </a>
+    </td>
+</tr>
+<tr>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/HunteRoi>
+            <img src=https://avatars.githubusercontent.com/u/32441291?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Tinaël Devresse/>
+            <br />
+            <sub style="font-size:14px"><b>Tinaël Devresse</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/kahaus>
+            <img src=https://avatars.githubusercontent.com/u/8679120?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=kahaus/>
+            <br />
+            <sub style="font-size:14px"><b>kahaus</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/khaled-fci>
+            <img src=https://avatars.githubusercontent.com/u/816733?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=khaled-fci/>
+            <br />
+            <sub style="font-size:14px"><b>khaled-fci</b></sub>
+        </a>
+    </td>
+</tr>
+<tr>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/matteobucci>
+            <img src=https://avatars.githubusercontent.com/u/9332567?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Matteo Bucci/>
+            <br />
+            <sub style="font-size:14px"><b>Matteo Bucci</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
+        <a href=https://github.com/Tr00d>
+            <img src=https://avatars.githubusercontent.com/u/59444272?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Guillaume Faas/>
+            <br />
+            <sub style="font-size:14px"><b>Guillaume Faas</b></sub>
+        </a>
+    </td>
+    <td align="center" style="word-wrap: break-word; width: 150.0; height: 150.0">
         <a href=https://github.com/ythirion>
             <img src=https://avatars.githubusercontent.com/u/20967693?v=4 width="100;"  style="border-radius:50%;align-items:center;justify-content:center;overflow:hidden;padding-top:10px" alt=Yoan Thirion/>
             <br />
@@ -67,4 +127,3 @@ We have structured this workshop using the [4C model](https://www.bowperson.com/
     </td>
 </tr>
 </table>
-
