@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static money_problem.domain.Currency.*;
-import static money_problem.domain.MoneyUtils.dollars;
+import static money_problem.domain.MoneyUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -33,34 +33,34 @@ class PortfolioTest {
     @DisplayName("5 USD + 10 EUR = 17 USD")
     void shouldAddMoneyInDollarsAndEuros() throws MissingExchangeRatesException {
         var portfolio = new Portfolio();
-        portfolio.add(5, USD);
-        portfolio.add(10, EUR);
+        portfolio.add(dollars(5));
+        portfolio.add(euros(10));
 
         assertThat(portfolio.evaluate(bank, USD))
-                .isEqualTo(17);
+                .isEqualTo(dollars(17));
     }
 
     @Test
     @DisplayName("1 USD + 1100 KRW = 2200 KRW")
     void shouldAddMoneyInDollarsAndKoreanWons() throws MissingExchangeRatesException {
         var portfolio = new Portfolio();
-        portfolio.add(1, USD);
-        portfolio.add(1100, KRW);
+        portfolio.add(dollars(1));
+        portfolio.add(koreanWons(1100));
 
         assertThat(portfolio.evaluate(bank, KRW))
-                .isEqualTo(2200);
+                .isEqualTo(koreanWons(2200));
     }
 
     @Test
     @DisplayName("5 USD + 10 EUR + 4 EUR = 21.8 USD")
     void shouldAddMoneyInDollarsAndMultipleAmountInEuros() throws MissingExchangeRatesException {
         var portfolio = new Portfolio();
-        portfolio.add(5, USD);
-        portfolio.add(10, EUR);
-        portfolio.add(4, EUR);
+        portfolio.add(dollars(5));
+        portfolio.add(euros(10));
+        portfolio.add(euros(4));
 
         assertThat(portfolio.evaluate(bank, USD))
-                .isEqualTo(21.8);
+                .isEqualTo(dollars(21.8));
     }
 
     @Test

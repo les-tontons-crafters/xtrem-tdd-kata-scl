@@ -22,7 +22,7 @@ public class Portfolio {
         });
     }
 
-    public double evaluate(Bank bank, Currency toCurrency) throws MissingExchangeRatesException {
+    public Money evaluate(Bank bank, Currency toCurrency) throws MissingExchangeRatesException {
         var convertedResult = 0d;
         var missingExchangeRates = new ArrayList<MissingExchangeRateException>();
 
@@ -40,6 +40,6 @@ public class Portfolio {
         if (!missingExchangeRates.isEmpty()) {
             throw new MissingExchangeRatesException(missingExchangeRates);
         }
-        return convertedResult;
+        return new Money(convertedResult, toCurrency);
     }
 }
