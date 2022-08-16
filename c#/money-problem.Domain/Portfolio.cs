@@ -10,7 +10,7 @@ public class Portfolio
     {
         double convertedResult = 0;
         var missingExchangeRates = new List<MissingExchangeRateException>();
-        foreach (Money money in this.moneys)
+        this.moneys.ToList().ForEach(money =>
         {
             try
             {
@@ -21,7 +21,7 @@ public class Portfolio
             {
                 missingExchangeRates.Add(exception);
             }
-        }
+        });
         
         if (missingExchangeRates.Any()) {
             throw new MissingExchangeRatesException(missingExchangeRates);
