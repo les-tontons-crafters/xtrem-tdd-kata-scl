@@ -4,18 +4,6 @@ public class Portfolio
 {
     private readonly Dictionary<Currency, double> _exchangesRates = new();
     
-    public void Add(double amount, Currency currency)
-    {
-        if (_exchangesRates.ContainsKey(currency))
-        {
-            _exchangesRates[currency] += amount;
-        }
-        else
-        {
-            _exchangesRates.Add(currency, amount);
-        }
-    }
-
     public double Evaluate(Currency currency, Bank bank)
     {
         double rtnVal = 0;
@@ -25,5 +13,17 @@ public class Portfolio
         }
 
         return rtnVal;
+    }
+
+    public void Add(Money money)
+    {
+        if (_exchangesRates.ContainsKey(money.Currency))
+        {
+            _exchangesRates[money.Currency] += money.Amount;
+        }
+        else
+        {
+            _exchangesRates.Add(money.Currency, money.Amount);
+        }
     }
 }

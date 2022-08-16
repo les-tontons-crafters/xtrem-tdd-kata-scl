@@ -11,8 +11,8 @@ public class PortfolioShould
     {
         var bank = Bank.WithExchangeRate(Currency.EUR, Currency.USD, 1.2);
         var portfolio = new Portfolio();
-        portfolio.Add(5, Currency.USD);
-        portfolio.Add(10, Currency.EUR);
+        portfolio.Add(new Money(5, Currency.USD));
+        portfolio.Add(new Money(10, Currency.EUR));
 
         portfolio.Evaluate(Currency.USD, bank).Should().Be(17);
     }
@@ -22,8 +22,8 @@ public class PortfolioShould
     {
         var bank = Bank.WithExchangeRate(Currency.USD, Currency.KRW, 1100);
         var portfolio = new Portfolio();
-        portfolio.Add(1, Currency.USD);
-        portfolio.Add(1100, Currency.KRW);
+        portfolio.Add(new Money(1, Currency.USD));
+        portfolio.Add(new Money(1100, Currency.KRW));
         
         portfolio.Evaluate(Currency.KRW, bank).Should().Be(2200);
     }
@@ -33,8 +33,8 @@ public class PortfolioShould
     {
         var bank = Bank.WithExchangeRate(Currency.USD, Currency.USD, 1);
         var portfolio = new Portfolio();
-        portfolio.Add(1, Currency.USD);
-        portfolio.Add(1100, Currency.USD);
+        portfolio.Add(new Money(1, Currency.USD));
+        portfolio.Add(new Money(1100, Currency.USD));
 
         portfolio.Evaluate(Currency.USD, bank).Should().Be(1101);
     }
