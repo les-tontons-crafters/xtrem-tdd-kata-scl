@@ -19,7 +19,7 @@ namespace money_problem.Tests
         public void MultiplyInEuros()
         {
             MoneyCalculator
-                .Times(new Money(10, EUR), 2)
+                .Times(Money.FromEuro(10), 2)
                 .Should()
                 .Be(new Money(20, EUR));
         }
