@@ -30,4 +30,10 @@ public class Portfolio
         // Simply instantiate a new Money from here
         return new Money(convertedResult, currency);
     }
+
+    public ConversionResult EvaluateWithResult(Bank bank, Currency currency)
+    {
+        var money = this.Evaluate(bank, currency);
+        return new ConversionResult(null, money);
+    }
 }

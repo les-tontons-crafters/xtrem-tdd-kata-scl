@@ -26,10 +26,10 @@ public class PortfolioTest
         portfolio.Add(10d.Euros());
 
         // Act
-        var evaluation = portfolio.Evaluate(bank, Currency.USD);
-
+        ConversionResult conversionResult = portfolio.EvaluateWithResult(bank, Currency.USD);
+        
         // Assert
-        evaluation.Should().Be(17d.Dollars());
+        conversionResult.Money.Should().Be(17d.Dollars());
     }
 
     [Fact(DisplayName = "1 USD + 1100 KRW = 2200 KRW")]
