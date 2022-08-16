@@ -17,28 +17,28 @@ public final class Bank {
         return bank;
     }
 
-    public void addExchangeRate(Currency from, Currency to, double rate) {
-        exchangeRates.put(keyFor(from, to), rate);
-    }
-
     private static String keyFor(Currency from, Currency to) {
         return from + "->" + to;
     }
 
-    public double convert(double amount, Currency from, Currency to) throws MissingExchangeRateException {
-        if (!canConvert(from, to)) {
-            throw new MissingExchangeRateException(from, to);
+    public void addExchangeRate(Currency from, Currency to, double rate) {
+        exchangeRates.put(keyFor(from, to), rate);
+    }
+
+    public Money convert(Money money, Currency to) throws MissingExchangeRateException {
+        if (!canConvert(money, to)) {
+            throw new MissingExchangeRateException(money.currency(), to);
         }
-        return convertSafely(amount, from, to);
+        return convertSafely(money, to);
     }
 
-    private double convertSafely(double amount, Currency from, Currency to) {
-        return from == to
-                ? amount
-                : amount * exchangeRates.get(keyFor(from, to));
+    private boolean canConvert(Money money, Currency to) {
+        return money.currency() == to || exchangeRates.containsKey(keyFor(money.currency(), to));
     }
 
-    private boolean canConvert(Currency from, Currency to) {
-        return from == to || exchangeRates.containsKey(keyFor(from, to));
+    private Money convertSafely(Money money, Currency to) {
+        return money.currency() == to
+                ? money
+                : new Money(money.amount() * exchangeRates.get(keyFor(money.currency(), to)), to);
     }
 }

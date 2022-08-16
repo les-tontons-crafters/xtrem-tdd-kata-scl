@@ -1,9 +1,6 @@
 package money_problem.domain;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
 
 public class Portfolio {
     private final ArrayList<Money> moneys = new ArrayList<>();
@@ -18,8 +15,8 @@ public class Portfolio {
 
         for (var money : moneys) {
             try {
-                var convertedAmount = bank.convert(money.amount(), money.currency(), toCurrency);
-                convertedResult += convertedAmount;
+                var convertedAmount = bank.convert(money, toCurrency);
+                convertedResult += convertedAmount.amount();
             } catch (MissingExchangeRateException missingExchangeRateException) {
                 missingExchangeRates.add(missingExchangeRateException);
             }
