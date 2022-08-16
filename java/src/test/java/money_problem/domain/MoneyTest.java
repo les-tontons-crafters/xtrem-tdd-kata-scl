@@ -7,11 +7,11 @@ import static money_problem.domain.Currency.EUR;
 import static money_problem.domain.Currency.KRW;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MoneyCalculatorTest {
+class MoneyTest {
     @Test
     @DisplayName("10 EUR x 2 = 20 EUR")
     void shouldMultiplyInEuros() {
-        assertThat(new Money(10, EUR).times(2))
+        assertThat(MoneyUtils.euros(10).times(2))
                 .isEqualTo(new Money(20, EUR));
     }
 
