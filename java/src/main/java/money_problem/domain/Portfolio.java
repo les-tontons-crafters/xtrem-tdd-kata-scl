@@ -6,34 +6,22 @@ import java.util.List;
 import java.util.Map;
 
 public class Portfolio {
-    private final Map<Currency, List<Double>> moneys = new EnumMap<>(Currency.class);
+    private final ArrayList<Money> moneys = new ArrayList<>();
 
     public void add(Money money) {
-        add(money.amount(), money.currency());
-    }
-
-    public void add(double amount, Currency currency) {
-        moneys.compute(currency, (c, amounts) -> {
-            if (amounts == null) {
-                amounts = new ArrayList<>();
-            }
-            amounts.add(amount);
-            return amounts;
-        });
+        moneys.add(money);
     }
 
     public Money evaluate(Bank bank, Currency toCurrency) throws MissingExchangeRatesException {
         var convertedResult = 0d;
         var missingExchangeRates = new ArrayList<MissingExchangeRateException>();
 
-        for (Map.Entry<Currency, List<Double>> entry : moneys.entrySet()) {
-            for (Double amount : entry.getValue()) {
-                try {
-                    var convertedAmount = bank.convert(amount, entry.getKey(), toCurrency);
-                    convertedResult += convertedAmount;
-                } catch (MissingExchangeRateException missingExchangeRateException) {
-                    missingExchangeRates.add(missingExchangeRateException);
-                }
+        for (var money : moneys) {
+            try {
+                var convertedAmount = bank.convert(money.amount(), money.currency(), toCurrency);
+                convertedResult += convertedAmount;
+            } catch (MissingExchangeRateException missingExchangeRateException) {
+                missingExchangeRates.add(missingExchangeRateException);
             }
         }
 

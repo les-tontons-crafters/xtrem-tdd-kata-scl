@@ -67,9 +67,9 @@ class PortfolioTest {
     @DisplayName("Throws a MissingExchangeRatesException in case of missing exchange rates")
     void shouldThrowAMissingExchangeRatesException() {
         var portfolio = new Portfolio();
-        portfolio.add(1, EUR);
-        portfolio.add(1, USD);
-        portfolio.add(1, KRW);
+        portfolio.add(euros(1));
+        portfolio.add(dollars(1));
+        portfolio.add(koreanWons(1));
 
         assertThatThrownBy(() -> portfolio.evaluate(bank, EUR))
                 .isInstanceOf(MissingExchangeRatesException.class)
