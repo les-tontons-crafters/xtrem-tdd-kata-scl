@@ -33,7 +33,30 @@ public class Portfolio
 
     public ConversionResult EvaluateWithResult(Bank bank, Currency currency)
     {
-        var money = this.Evaluate(bank, currency);
-        return new ConversionResult(null, money);
+        double convertedResult = 0;
+        var missingExchangeRates = new List<MissingExchangeRateException>();
+        var results = this.moneys.Select(money => Convert(money, bank, currency));
+        
+        if (results.Any(result => result.Exception != null)) {
+            throw new MissingExchangeRatesException(results.Where(result => result.Exception != null).Select(result => result.Exception).ToList());
+        }
+
+        var sum = results.Sum(result => result.Money.Amount);
+        
+        // Simply instantiate a new Money from here
+        return new Money(sum, currency);
+    }
+
+    private ConversionResult Convert(Money money, Bank bank, Currency targetCurrency)
+    {
+        try
+        {
+            Money convertedMoney = bank.Convert(money, targetCurrency);
+            return new ConversionResult(null, convertedMoney);
+        }
+        catch (MissingExchangeRateException exception)
+        {
+            return new ConversionResult(exception, null);
+        }
     }
 }
