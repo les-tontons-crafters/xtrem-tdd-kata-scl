@@ -37,5 +37,6 @@ public class Portfolio {
             throw new MissingExchangeRatesException(missingExchangeRates);
         }
         return convertedResult;
+
     }
 }
