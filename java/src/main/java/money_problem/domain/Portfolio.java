@@ -8,6 +8,10 @@ import java.util.Map;
 public class Portfolio {
     private final Map<Currency, List<Double>> moneys = new EnumMap<>(Currency.class);
 
+    public void add(Money money) {
+        add(money.amount(), money.currency());
+    }
+
     public void add(double amount, Currency currency) {
         moneys.compute(currency, (c, amounts) -> {
             if (amounts == null) {

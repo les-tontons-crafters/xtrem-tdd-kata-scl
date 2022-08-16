@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static money_problem.domain.Currency.*;
+import static money_problem.domain.MoneyUtils.dollars;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -21,11 +22,11 @@ class PortfolioTest {
     @DisplayName("5 USD + 10 USD = 15 USD")
     void shouldAddMoneyInTheSameCurrency() throws MissingExchangeRatesException {
         var portfolio = new Portfolio();
-        portfolio.add(5, USD);
-        portfolio.add(10, USD);
+        portfolio.add(dollars(5));
+        portfolio.add(dollars(10));
 
         assertThat(portfolio.evaluate(bank, USD))
-                .isEqualTo(15);
+                .isEqualTo(dollars(15));
     }
 
     @Test
