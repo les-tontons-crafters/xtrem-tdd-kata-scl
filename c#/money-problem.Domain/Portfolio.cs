@@ -10,31 +10,6 @@ public class Portfolio
     {
         double convertedResult = 0;
         var missingExchangeRates = new List<MissingExchangeRateException>();
-        this.moneys.ToList().ForEach(money =>
-        {
-            try
-            {
-                Money convertedMoney = bank.Convert(money, currency);
-                convertedResult += convertedMoney.Amount;
-            }
-            catch (MissingExchangeRateException exception)
-            {
-                missingExchangeRates.Add(exception);
-            }
-        });
-        
-        if (missingExchangeRates.Any()) {
-            throw new MissingExchangeRatesException(missingExchangeRates);
-        }
-        
-        // Simply instantiate a new Money from here
-        return new Money(convertedResult, currency);
-    }
-
-    public ConversionResult EvaluateWithResult(Bank bank, Currency currency)
-    {
-        double convertedResult = 0;
-        var missingExchangeRates = new List<MissingExchangeRateException>();
         var results = this.moneys.Select(money => Convert(money, bank, currency));
         
         if (results.Any(result => result.Exception != null)) {
