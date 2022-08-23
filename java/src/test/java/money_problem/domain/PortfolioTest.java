@@ -14,8 +14,8 @@ class PortfolioTest {
 
     @BeforeEach
     void setup() {
-        bank = Bank.withExchangeRate(EUR, USD, 1.2);
-        bank.addExchangeRate(USD, KRW, 1100);
+        bank = Bank.withExchangeRate(EUR, USD, 1.2)
+                .addExchangeRate(USD, KRW, 1100);
     }
 
     @Test

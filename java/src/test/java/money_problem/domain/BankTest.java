@@ -40,9 +40,9 @@ class BankTest {
         assertThat(bank.convert(euros(10), USD))
                 .isEqualTo(dollars(12));
 
-        bank.addExchangeRate(EUR, USD, 1.3);
+        var newBank = bank.addExchangeRate(EUR, USD, 1.3);
 
-        assertThat(bank.convert(euros(10), USD))
+        assertThat(newBank.convert(euros(10), USD))
                 .isEqualTo(dollars(13));
     }
 }

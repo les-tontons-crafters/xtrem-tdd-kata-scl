@@ -1,5 +1,6 @@
 package money_problem.domain;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,23 +8,24 @@ public final class Bank {
     private final Map<String, Double> exchangeRates;
 
     private Bank(Map<String, Double> exchangeRates) {
-        this.exchangeRates = exchangeRates;
+        this.exchangeRates = Collections.unmodifiableMap(exchangeRates);
     }
 
     public static Bank withExchangeRate(Currency from, Currency to, double rate) {
         var bank = new Bank(new HashMap<>());
-        bank.addExchangeRate(from, to, rate);
-
-        return bank;
+        return bank.addExchangeRate(from, to, rate);
     }
 
     private static String keyFor(Currency from, Currency to) {
         return from + "->" + to;
     }
 
-    public void addExchangeRate(Currency from, Currency to, double rate) {
-        // TODO remove mutation
-        exchangeRates.put(keyFor(from, to), rate);
+    public Bank addExchangeRate(Currency from, Currency to, double rate) {
+
+        var newExchangeRates = new HashMap<>(exchangeRates);
+        newExchangeRates.put(keyFor(from, to), rate);
+
+        return new Bank(newExchangeRates);
     }
 
     public Money convert(Money money, Currency to) throws MissingExchangeRateException {
