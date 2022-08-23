@@ -8,17 +8,15 @@ public class Portfolio
 
     public Money Evaluate(Bank bank, Currency currency)
     {
-        double convertedResult = 0;
-        var missingExchangeRates = new List<MissingExchangeRateException>();
         var results = this.moneys.Select(money => Convert(money, bank, currency));
-        
-        if (results.Any(result => result.Exception != null)) {
-            throw new MissingExchangeRatesException(results.Where(result => result.Exception != null).Select(result => result.Exception).ToList());
+        var exceptions = results.Where(result => result.Exception != null);
+
+        if (exceptions.Any()) {
+            throw new MissingExchangeRatesException(exceptions.Select(result => result.Exception!).ToList());
         }
 
-        var sum = results.Sum(result => result.Money.Amount);
+        var sum = results.Sum(result => result.Money!.Amount);
         
-        // Simply instantiate a new Money from here
         return new Money(sum, currency);
     }
 
