@@ -2,9 +2,9 @@ namespace money_problem.Domain;
 
 public class Portfolio
 {
-    private readonly ICollection<Money> moneys = new List<Money>();
+    private readonly ICollection<Money> _moneys = new List<Money>();
 
-    public void Add(Money money) => this.moneys.Add(money);
+    public void Add(Money money) => _moneys.Add(money);
 
     public Money Evaluate(Bank bank, Currency currency)
     {
@@ -15,22 +15,23 @@ public class Portfolio
             : ToMoney(currency, results);
     }
 
-    private static Money ToMoney(Currency currency, List<ConversionResult> results) => new Money(results.Sum(result => result.Money!.Amount), currency);
+    private static Money ToMoney(Currency currency, List<ConversionResult> results) => new(results.Sum(result => result.Money!.Amount), currency);
 
-    private List<ConversionResult> ConvertMoneys(Bank bank, Currency currency) => this.moneys.Select(money => Convert(money, bank, currency)).ToList();
+    private List<ConversionResult> ConvertMoneys(Bank bank, Currency currency) => _moneys.Select(money => Convert(money, bank, currency)).ToList();
 
-    private static List<ConversionResult> GetExceptions(List<ConversionResult> results) => results.Where(result => result.Exception != null).ToList();
+    private static List<ConversionResult> GetExceptions(List<ConversionResult> results) => results.Where(result => result.HasException()).ToList();
 
-    private ConversionResult Convert(Money money, Bank bank, Currency targetCurrency)
+
+    private static ConversionResult Convert(Money money, Bank bank, Currency targetCurrency)
     {
         try
         {
             Money convertedMoney = bank.Convert(money, targetCurrency);
-            return new ConversionResult(null, convertedMoney);
+            return ConversionResult.Success(convertedMoney);
         }
         catch (MissingExchangeRateException exception)
         {
-            return new ConversionResult(exception, null);
+            return ConversionResult.Failure(exception);
         }
     }
 }
