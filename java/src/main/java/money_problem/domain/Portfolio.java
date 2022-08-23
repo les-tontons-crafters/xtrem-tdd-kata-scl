@@ -11,7 +11,8 @@ public final class Portfolio {
     }
 
     public Portfolio add(Money money) {
-        return null;
+        addOld(money);
+        return this;
     }
 
     public Money evaluate(Bank bank, Currency toCurrency) throws MissingExchangeRatesException {
