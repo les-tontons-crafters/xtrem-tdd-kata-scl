@@ -22,6 +22,7 @@ public final class Bank {
     }
 
     public void addExchangeRate(Currency from, Currency to, double rate) {
+        // TODO remove mutation
         exchangeRates.put(keyFor(from, to), rate);
     }
 

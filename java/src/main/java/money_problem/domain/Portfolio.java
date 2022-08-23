@@ -7,6 +7,7 @@ public final class Portfolio {
     private final ArrayList<Money> moneys = new ArrayList<>();
 
     public void add(Money money) {
+        // TODO remove mutation
         moneys.add(money);
     }
 
@@ -20,7 +21,9 @@ public final class Portfolio {
     }
 
     private boolean containsFailure(List<ConversionResult> convertedMoneys) {
-        return convertedMoneys.stream().anyMatch(ConversionResult::isFailure);
+        return convertedMoneys
+                .stream()
+                .anyMatch(ConversionResult::isFailure);
     }
 
     private List<ConversionResult> convertAllMoneys(Bank bank, Currency toCurrency) {
