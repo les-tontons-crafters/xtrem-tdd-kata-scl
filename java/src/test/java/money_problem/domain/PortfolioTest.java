@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static money_problem.domain.Currency.*;
 import static money_problem.domain.MoneyUtils.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,9 +23,10 @@ class PortfolioTest {
     @Test
     @DisplayName("5 USD + 10 USD = 15 USD")
     void shouldAddMoneyInTheSameCurrency() throws MissingExchangeRatesException {
-        var portfolio = new Portfolio()
-                .add(dollars(5))
-                .add(dollars(10));
+        var portfolio = portfolioWith(
+                dollars(5),
+                dollars(10)
+        );
 
         assertThat(portfolio.evaluate(bank, USD))
                 .isEqualTo(dollars(15));
@@ -74,6 +77,11 @@ class PortfolioTest {
         assertThatThrownBy(() -> portfolio.evaluate(bank, EUR))
                 .isInstanceOf(MissingExchangeRatesException.class)
                 .hasMessage("Missing exchange rate(s): [USD->EUR],[KRW->EUR]");
+    }
+
+    private Portfolio portfolioWith(Money... moneys) {
+        return Arrays.stream(moneys)
+                .reduce(new Portfolio(), Portfolio::add, (previousPortfolio, newPortfolio) -> newPortfolio);
     }
 }
 
