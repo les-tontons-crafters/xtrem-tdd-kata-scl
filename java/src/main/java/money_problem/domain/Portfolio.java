@@ -15,10 +15,6 @@ public final class Portfolio {
         this.moneys = Collections.unmodifiableList(moneys);
     }
 
-    public void addOld(Money money) {
-        moneys.add(money);
-    }
-
     public Portfolio add(Money money) {
         var updatedMoneys = new ArrayList<>(moneys);
         updatedMoneys.add(money);
