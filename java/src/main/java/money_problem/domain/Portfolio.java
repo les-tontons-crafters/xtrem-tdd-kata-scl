@@ -6,8 +6,12 @@ import java.util.List;
 public final class Portfolio {
     private final ArrayList<Money> moneys = new ArrayList<>();
 
-    public void add(Money money) {
+    public void addOld(Money money) {
         moneys.add(money);
+    }
+
+    public Portfolio add(Money money) {
+        return null;
     }
 
     public Money evaluate(Bank bank, Currency toCurrency) throws MissingExchangeRatesException {

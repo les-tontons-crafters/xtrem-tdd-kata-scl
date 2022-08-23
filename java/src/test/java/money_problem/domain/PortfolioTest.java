@@ -33,8 +33,8 @@ class PortfolioTest {
     @DisplayName("5 USD + 10 EUR = 17 USD")
     void shouldAddMoneyInDollarsAndEuros() throws MissingExchangeRatesException {
         var portfolio = new Portfolio();
-        portfolio.add(dollars(5));
-        portfolio.add(euros(10));
+        portfolio.addOld(dollars(5));
+        portfolio.addOld(euros(10));
 
         assertThat(portfolio.evaluate(bank, USD))
                 .isEqualTo(dollars(17));
@@ -44,8 +44,8 @@ class PortfolioTest {
     @DisplayName("1 USD + 1100 KRW = 2200 KRW")
     void shouldAddMoneyInDollarsAndKoreanWons() throws MissingExchangeRatesException {
         var portfolio = new Portfolio();
-        portfolio.add(dollars(1));
-        portfolio.add(koreanWons(1100));
+        portfolio.addOld(dollars(1));
+        portfolio.addOld(koreanWons(1100));
 
         assertThat(portfolio.evaluate(bank, KRW))
                 .isEqualTo(koreanWons(2200));
@@ -55,9 +55,9 @@ class PortfolioTest {
     @DisplayName("5 USD + 10 EUR + 4 EUR = 21.8 USD")
     void shouldAddMoneyInDollarsAndMultipleAmountInEuros() throws MissingExchangeRatesException {
         var portfolio = new Portfolio();
-        portfolio.add(dollars(5));
-        portfolio.add(euros(10));
-        portfolio.add(euros(4));
+        portfolio.addOld(dollars(5));
+        portfolio.addOld(euros(10));
+        portfolio.addOld(euros(4));
 
         assertThat(portfolio.evaluate(bank, USD))
                 .isEqualTo(dollars(21.8));
@@ -67,9 +67,9 @@ class PortfolioTest {
     @DisplayName("Throws a MissingExchangeRatesException in case of missing exchange rates")
     void shouldThrowAMissingExchangeRatesException() {
         var portfolio = new Portfolio();
-        portfolio.add(euros(1));
-        portfolio.add(dollars(1));
-        portfolio.add(koreanWons(1));
+        portfolio.addOld(euros(1));
+        portfolio.addOld(dollars(1));
+        portfolio.addOld(koreanWons(1));
 
         assertThatThrownBy(() -> portfolio.evaluate(bank, EUR))
                 .isInstanceOf(MissingExchangeRatesException.class)
