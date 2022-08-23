@@ -2,9 +2,8 @@ package money_problem.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class Portfolio {
+public final class Portfolio {
     private final ArrayList<Money> moneys = new ArrayList<>();
 
     public void add(Money money) {
@@ -12,43 +11,63 @@ public class Portfolio {
     }
 
     public Money evaluate(Bank bank, Currency toCurrency) throws MissingExchangeRatesException {
+        var convertedMoneys = convertAllMoneys(bank, toCurrency);
 
-        var results = covertMoneysToList(bank, toCurrency);
-
-        if (containsMissingExchangeRates(results)) {
-            throw new MissingExchangeRatesException(getMissingExchangeRates(results));
+        if (containsFailure(convertedMoneys)) {
+            throw toMissingExchangeRatesException(convertedMoneys);
         }
-
-        var total = getMoneysSum(results);
-
-        return new Money(total, toCurrency);
+        return toMoney(convertedMoneys, toCurrency);
     }
 
-    private List<MissingExchangeRateException> getMissingExchangeRates(List<ConversionResult> results) {
-        return results.stream().map(ConversionResult::missingExchangeRateException).filter(Objects::nonNull).toList();
+    private boolean containsFailure(List<ConversionResult> convertedMoneys) {
+        return convertedMoneys.stream().anyMatch(ConversionResult::isFailure);
     }
 
-    private double getMoneysSum(List<ConversionResult> results) {
-        return results.stream().filter(ConversionResult::isSuccess).mapToDouble(ConversionResult::getAmount).sum();
+    private List<ConversionResult> convertAllMoneys(Bank bank, Currency toCurrency) {
+        return moneys.stream()
+                .map(money -> convertMoney(bank, money, toCurrency))
+                .toList();
     }
 
-    private boolean containsMissingExchangeRates(List<ConversionResult> results) {
-        return results
-                .stream()
-                .anyMatch(
-                        ConversionResult::isFailure
-                );
+    private MissingExchangeRatesException toMissingExchangeRatesException(List<ConversionResult> convertedMoneys) {
+        return new MissingExchangeRatesException(
+                convertedMoneys.stream()
+                        .filter(ConversionResult::isFailure)
+                        .map(ConversionResult::missingExchangeRateException)
+                        .toList()
+        );
     }
 
-    private List<ConversionResult> covertMoneysToList(Bank bank, Currency toCurrency) {
-        return moneys.stream().map(money -> convertMoney(bank, money, toCurrency)).toList();
+    private Money toMoney(List<ConversionResult> convertedMoneys, Currency toCurrency) {
+        return new Money(convertedMoneys.stream()
+                .filter(ConversionResult::isSuccess)
+                .mapToDouble(c -> c.money.amount())
+                .sum(), toCurrency);
     }
 
-    private static ConversionResult convertMoney(Bank bank, Money money, Currency toCurrency) {
+    private ConversionResult convertMoney(Bank bank, Money money, Currency toCurrency) {
         try {
             return new ConversionResult(bank.convert(money, toCurrency));
         } catch (MissingExchangeRateException missingExchangeRateException) {
             return new ConversionResult(missingExchangeRateException);
+        }
+    }
+
+    private record ConversionResult(Money money, MissingExchangeRateException missingExchangeRateException) {
+        public ConversionResult(Money money) {
+            this(money, null);
+        }
+
+        public ConversionResult(MissingExchangeRateException missingExchangeRateException) {
+            this(null, missingExchangeRateException);
+        }
+
+        public boolean isFailure() {
+            return missingExchangeRateException != null;
+        }
+
+        public boolean isSuccess() {
+            return money != null;
         }
     }
 }
