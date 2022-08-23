@@ -1,6 +1,8 @@
 package money_problem.domain;
 
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.function.Function;
 
 public class Portfolio {
     private final ArrayList<Money> moneys = new ArrayList<>();
@@ -10,21 +12,23 @@ public class Portfolio {
     }
 
     public Money evaluate(Bank bank, Currency toCurrency) throws MissingExchangeRatesException {
-        var convertedResult = 0d;
-        var missingExchangeRates = new ArrayList<MissingExchangeRateException>();
 
-        for (var money : moneys) {
-            try {
-                var convertedAmount = bank.convert(money, toCurrency);
-                convertedResult += convertedAmount.amount();
-            } catch (MissingExchangeRateException missingExchangeRateException) {
-                missingExchangeRates.add(missingExchangeRateException);
-            }
+        var results = moneys.stream().map(money -> convertMoney(bank, money, toCurrency)).toList();
+
+        if (results.stream().anyMatch(money -> money.missingExchangeRateException() != null)) {
+            throw new MissingExchangeRatesException(results.stream().map(ConversionResult::missingExchangeRateException).filter(Objects::nonNull).toList());
         }
 
-        if (!missingExchangeRates.isEmpty()) {
-            throw new MissingExchangeRatesException(missingExchangeRates);
+        var total = results.stream().filter(result -> result.money() != null).mapToDouble(result -> result.money().amount()).sum();
+
+        return new Money(total, toCurrency);
+    }
+
+    private static ConversionResult convertMoney(Bank bank, Money money, Currency toCurrency) {
+        try {
+            return new ConversionResult(bank.convert(money, toCurrency));
+        } catch (MissingExchangeRateException missingExchangeRateException) {
+            return new ConversionResult(missingExchangeRateException);
         }
-        return new Money(convertedResult, toCurrency);
     }
 }
