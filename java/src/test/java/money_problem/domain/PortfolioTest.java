@@ -21,9 +21,9 @@ class PortfolioTest {
     @Test
     @DisplayName("5 USD + 10 USD = 15 USD")
     void shouldAddMoneyInTheSameCurrency() throws MissingExchangeRatesException {
-        var portfolio = new Portfolio();
-        portfolio.add(dollars(5));
-        portfolio.add(dollars(10));
+        var portfolio = new Portfolio()
+                .add(dollars(5))
+                .add(dollars(10));
 
         assertThat(portfolio.evaluate(bank, USD))
                 .isEqualTo(dollars(15));

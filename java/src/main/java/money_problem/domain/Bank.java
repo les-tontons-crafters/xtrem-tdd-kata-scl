@@ -21,7 +21,6 @@ public final class Bank {
     }
 
     public Bank addExchangeRate(Currency from, Currency to, double rate) {
-
         var newExchangeRates = new HashMap<>(exchangeRates);
         newExchangeRates.put(keyFor(from, to), rate);
 

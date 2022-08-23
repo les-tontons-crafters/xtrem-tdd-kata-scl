@@ -7,7 +7,6 @@ public final class Portfolio {
     private final ArrayList<Money> moneys = new ArrayList<>();
 
     public void add(Money money) {
-        // TODO remove mutation
         moneys.add(money);
     }
 
