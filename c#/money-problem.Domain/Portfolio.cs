@@ -19,7 +19,7 @@ public class Portfolio
 
     private static List<ConversionResult> GetExceptions(List<ConversionResult> results) => results.Where(result => result.HasException()).ToList();
 
-    private static MissingExchangeRatesException ToException(List<ConversionResult> exceptions) => new MissingExchangeRatesException(exceptions.Select(result => result.GetExceptionUnsafe()).ToList());
+    private static MissingExchangeRatesException ToException(List<ConversionResult> exceptions) => new(exceptions.Select(result => result.GetExceptionUnsafe()).ToList());
 
     private static Money ToMoney(Currency currency, List<ConversionResult> results) => new(results.Sum(result => result.GetMoneyUnsafe().Amount), currency);
 
