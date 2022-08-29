@@ -6,12 +6,9 @@ public record ConversionResult(MissingExchangeRateException? Exception, Money? M
 
     public static ConversionResult Failure(MissingExchangeRateException exception) => new(exception, null);
 
-    public bool HasException()
-    {
-        return Exception != null;
-    }
+    public bool HasException() => this.Exception != null;
 
-    public MissingExchangeRateException GetExceptionUnsafe() => Exception!;
+    public MissingExchangeRateException GetExceptionUnsafe() => this.Exception!;
 
-    public Money GetMoneyUnsafe() => Money!;
+    public Money GetMoneyUnsafe() => this.Money!;
 }

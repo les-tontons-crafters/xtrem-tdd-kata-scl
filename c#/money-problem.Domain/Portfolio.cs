@@ -8,7 +8,7 @@ public class Portfolio
     {
         try
         {
-            Money convertedMoney = bank.Convert(money, targetCurrency);
+            var convertedMoney = bank.Convert(money, targetCurrency);
             return ConversionResult.Success(convertedMoney);
         }
         catch (MissingExchangeRateException exception)
@@ -17,22 +17,27 @@ public class Portfolio
         }
     }
 
-    private static List<ConversionResult> GetExceptions(List<ConversionResult> results) => results.Where(result => result.HasException()).ToList();
+    private static IEnumerable<ConversionResult> GetExceptions(IEnumerable<ConversionResult> results) =>
+        results.Where(result => result.HasException()).ToList();
 
-    private static MissingExchangeRatesException ToException(List<ConversionResult> exceptions) => new(exceptions.Select(result => result.GetExceptionUnsafe()).ToList());
+    private static MissingExchangeRatesException ToException(IEnumerable<ConversionResult> results) =>
+        new(GetExceptions(results).Select(result => result.GetExceptionUnsafe()));
 
-    private static Money ToMoney(Currency currency, List<ConversionResult> results) => new(results.Sum(result => result.GetMoneyUnsafe().Amount), currency);
+    private static Money ToMoney(Currency currency, IEnumerable<ConversionResult> results) =>
+        new(results.Sum(result => result.GetMoneyUnsafe().Amount), currency);
 
-    private List<ConversionResult> ConvertMoneys(Bank bank, Currency currency) => _moneys.Select(money => Convert(money, bank, currency)).ToList();
+    private IEnumerable<ConversionResult> ConvertMoneys(Bank bank, Currency currency) =>
+        this._moneys.Select(money => Convert(money, bank, currency));
 
-    public void Add(Money money) => _moneys.Add(money);
+    public void Add(Money money) => this._moneys.Add(money);
 
     public Money Evaluate(Bank bank, Currency currency)
     {
-        var results = ConvertMoneys(bank, currency);
-        var exceptions = GetExceptions(results);
-        return exceptions.Any()
-            ? throw ToException(exceptions)
+        var results = this.ConvertMoneys(bank, currency).ToList();
+        return HasMissingExchangeRates(results)
+            ? throw ToException(results)
             : ToMoney(currency, results);
     }
+
+    private static bool HasMissingExchangeRates(IEnumerable<ConversionResult> results) => GetExceptions(results).Any();
 }
