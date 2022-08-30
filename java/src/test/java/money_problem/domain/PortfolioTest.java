@@ -79,9 +79,10 @@ class PortfolioTest {
         );
 
 
-        assertThatThrownBy(() -> portfolio.evaluateWithException(bank, EUR))
-                .isInstanceOf(MissingExchangeRatesException.class)
-                .hasMessage("Missing exchange rate(s): [USD->EUR],[KRW->EUR]");
+        assertThat(portfolio.evaluate(bank, EUR)
+                .failure()
+                .message())
+                .isEqualTo("Missing exchange rate(s): [USD->EUR],[KRW->EUR]");
     }
 
     private Portfolio portfolioWith(Money... moneys) {

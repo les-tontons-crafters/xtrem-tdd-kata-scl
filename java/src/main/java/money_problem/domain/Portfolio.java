@@ -44,18 +44,18 @@ public final class Portfolio {
     }
 
     private MissingExchangeRatesException toMissingExchangeRatesException(List<ConversionResult> convertedMoneys) {
-        return new MissingExchangeRatesException(
-                convertedMoneys.stream()
+        return new MissingExchangeRatesException(new ArrayList<>()
+                /*convertedMoneys.stream()
                         .filter(ConversionResult::isFailure)
                         .map(ConversionResult::missingExchangeRateException)
-                        .toList()
+                        .toList()*/
         );
     }
 
     private Money toMoney(List<ConversionResult> convertedMoneys, Currency toCurrency) {
         return new Money(convertedMoneys.stream()
                 .filter(ConversionResult::isSuccess)
-                .mapToDouble(c -> c.money.amount())
+                .mapToDouble(c -> c.money().amount())
                 .sum(), toCurrency);
     }
 
@@ -74,27 +74,5 @@ public final class Portfolio {
             return new ConversionResult(e);
         }
 
-    }
-
-    private record ConversionResult(Money money, MissingExchangeRatesException missingExchangeRateException) {
-        public ConversionResult(Money money) {
-            this(money, null);
-        }
-
-        public ConversionResult(MissingExchangeRatesException missingExchangeRateException) {
-            this(null, missingExchangeRateException);
-        }
-
-        public boolean isFailure() {
-            return missingExchangeRateException != null;
-        }
-
-        public boolean isSuccess() {
-            return money != null;
-        }
-
-        public Money success() {
-            return money();
-        }
     }
 }
