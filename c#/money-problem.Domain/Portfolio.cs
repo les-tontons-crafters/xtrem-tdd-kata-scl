@@ -21,7 +21,7 @@ public class Portfolio
     {
         var missingExchangeRates = results
             .Where(result => result.IsFailure())
-            .Select(result => result.GetFailureUnsafe())
+            .Select(result => result.Failure)
             .ToList();
 
         return $"Missing exchange rate(s): {GetMissingRates(missingExchangeRates)}";
@@ -33,7 +33,7 @@ public class Portfolio
         
 
     private static Money ToMoney(IEnumerable<ConversionResult<MissingExchangeRateException>> results, Currency currency) =>
-        new(results.Sum(result => result.GetSuccessUnsafe().Amount), currency);
+        new(results.Sum(result => result.Success.Amount), currency);
 
     private static bool ContainsFailure(IEnumerable<ConversionResult<MissingExchangeRateException>> results) =>
         results.Any(result => result.IsFailure());

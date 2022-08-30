@@ -21,7 +21,7 @@ public class ConversionResult<T>
 
     public bool IsFailure() => this.failure != null;
 
-    public T GetFailureUnsafe() => this.failure!;
+    public T? Failure => this.failure;
 
-    public Money GetSuccessUnsafe() => this.success!;
+    public Money? Success => this.success;
 }

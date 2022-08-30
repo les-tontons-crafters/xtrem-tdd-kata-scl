@@ -24,7 +24,7 @@ public class PortfolioTest
     public void Add_ShouldAddMoneyInDollarAndEuro() =>
         PortfolioWith(5d.Dollars(), 10d.Euros())
             .Evaluate(this.bank, Currency.USD)
-            .GetSuccessUnsafe()
+            .Success
             .Should()
             .Be(17d.Dollars());
 
@@ -32,7 +32,7 @@ public class PortfolioTest
     public void Add_ShouldAddMoneyInDollarAndKoreanWons() =>
         PortfolioWith(1d.Dollars(), 1100d.KoreanWons())
             .Evaluate(this.bank, Currency.KRW)
-            .GetSuccessUnsafe()
+            .Success
             .Should()
             .Be(2200d.KoreanWons());
 
@@ -40,7 +40,7 @@ public class PortfolioTest
     public void Add_ShouldAddMoneyInDollarsAndMultipleAmountInEuros() =>
         PortfolioWith(5d.Dollars(), 10d.Euros(), 4d.Euros())
             .Evaluate(bank, Currency.USD)
-            .GetSuccessUnsafe()
+            .Success
             .Should()
             .Be(21.8.Dollars());
 
@@ -48,7 +48,7 @@ public class PortfolioTest
     public void Add_ShouldThrowAMissingExchangeRatesException() =>
         PortfolioWith(1d.Euros(), 1d.Dollars(), 1d.KoreanWons())
             .Evaluate(this.bank, Currency.EUR)
-            .GetFailureUnsafe()
+            .Failure
             .Should()
             .Be("Missing exchange rate(s): [USD->EUR],[KRW->EUR]");
 
@@ -56,7 +56,7 @@ public class PortfolioTest
     public void Add_ShouldAddMoneyInTheSameCurrency() =>
         PortfolioWith(5d.Dollars(), 10d.Dollars())
             .Evaluate(bank, Currency.USD)
-            .GetSuccessUnsafe()
+            .Success
             .Should()
             .Be(15d.Dollars());
 
