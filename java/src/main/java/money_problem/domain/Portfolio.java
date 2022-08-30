@@ -44,11 +44,10 @@ public final class Portfolio {
     }
 
     private MissingExchangeRatesException toMissingExchangeRatesException(List<ConversionResult> convertedMoneys) {
-        return new MissingExchangeRatesException(new ArrayList<>()
-                /*convertedMoneys.stream()
-                        .filter(ConversionResult::isFailure)
-                        .map(ConversionResult::missingExchangeRateException)
-                        .toList()*/
+        return new MissingExchangeRatesException(convertedMoneys.stream()
+                .filter(ConversionResult<MissingExchangeRateException>::isFailure)
+                .map(ConversionResult<MissingExchangeRateException>::failureException)
+                .toList()
         );
     }
 
@@ -63,7 +62,7 @@ public final class Portfolio {
         try {
             return new ConversionResult(bank.convert(money, toCurrency));
         } catch (MissingExchangeRateException missingExchangeRateException) {
-            return new ConversionResult(new MissingExchangeRatesException(missingExchangeRateException));
+            return new ConversionResult(missingExchangeRateException);
         }
     }
 
@@ -73,6 +72,5 @@ public final class Portfolio {
         } catch (MissingExchangeRatesException e) {
             return new ConversionResult(e);
         }
-
     }
 }

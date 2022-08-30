@@ -1,16 +1,16 @@
 package money_problem.domain;
 
-public record ConversionResult(Money money, MissingExchangeRatesException missingExchangeRateException) {
+public record ConversionResult<T extends Exception>(Money money, T failureException) {
     public ConversionResult(Money money) {
         this(money, null);
     }
 
-    public ConversionResult(MissingExchangeRatesException missingExchangeRateException) {
-        this(null, missingExchangeRateException);
+    public ConversionResult(T failure) {
+        this(null, failure);
     }
 
     public boolean isFailure() {
-        return missingExchangeRateException != null;
+        return failureException != null;
     }
 
     public boolean isSuccess() {
@@ -22,6 +22,6 @@ public record ConversionResult(Money money, MissingExchangeRatesException missin
     }
 
     public ConversionError failure() {
-        return null;
+        return new ConversionError(failureException.getMessage());
     }
 }
