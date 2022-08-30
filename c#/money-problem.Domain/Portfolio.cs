@@ -16,14 +16,6 @@ public class Portfolio
         this.moneys = moneys.ToImmutableList();
     }
 
-    public Money EvaluateWithException(Bank bank, Currency currency)
-    {
-        List<ConversionResult<MissingExchangeRateException>> results = this.GetConvertedMoneys(bank, currency);
-        return ContainsFailure(results)
-            ? throw ToException(results)
-            : ToMoney(results, currency);
-    }
-
     private static MissingExchangeRatesException ToException(IEnumerable<ConversionResult<MissingExchangeRateException>> results) =>
         new(results
             .Where(result => result.IsFailure())
@@ -62,14 +54,9 @@ public class Portfolio
 
     public ConversionResult<string> Evaluate(Bank bank, Currency currency)
     {
-        try
-        {
-            var money = this.EvaluateWithException(bank, currency);
-            return new ConversionResult<string>(money);
-        }
-        catch (MissingExchangeRatesException exception)
-        {
-            return new ConversionResult<string>(exception.Message);
-        }
+        List<ConversionResult<MissingExchangeRateException>> results = this.GetConvertedMoneys(bank, currency);
+        return ContainsFailure(results)
+            ? new ConversionResult<string>(ToException(results).Message)
+            : new ConversionResult<string>(ToMoney(results, currency));
     }
 }
