@@ -17,22 +17,18 @@ namespace money_problem.Tests
                 .Be(new Money(12, USD));
 
         [Fact(DisplayName = "10 EUR -> EUR = 10 EUR")]
-        public void ConvertMoneyInSameCurrency()
-        {
+        public void ConvertMoneyInSameCurrency() =>
             _bank.Convert(new Money(10, EUR), EUR)
                 .Success
                 .Should()
                 .Be(new Money(10, EUR));
-        }
 
         [Fact(DisplayName = "Throws a MissingExchangeRateException in case of missing exchange rates")]
-        public void ConvertWithMissingExchangeRateShouldThrowException()
-        {
+        public void ConvertWithMissingExchangeRateShouldThrowException() =>
             _bank.Convert(new Money(10, EUR), KRW)
                 .Failure
                 .Should()
                 .Be("EUR->KRW");
-        }
 
         [Fact(DisplayName = "Conversion with different exchange rates EUR -> USD")]
         public void ConvertWithDifferentExchangeRates()

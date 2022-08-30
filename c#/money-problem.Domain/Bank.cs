@@ -33,16 +33,11 @@ namespace money_problem.Domain
                 ? money
                 : money with { Amount = money.Amount * _exchangeRates[KeyFor(money.Currency, to)], Currency = to};
 
-        public ConversionResult<string> Convert(Money money, Currency uSD)
+        public ConversionResult<string> Convert(Money money, Currency to)
         {
-            try
-            {
-                return new ConversionResult<string>(this.ConvertWithException(money, uSD));
-            }
-            catch (MissingExchangeRateException ex)
-            {
-                return new ConversionResult<string>(ex.Message);
-            }
+            return CanConvert(money.Currency, to)
+                ? new ConversionResult<string>(ConvertSafely(money, to))
+                : new ConversionResult<string>(new MissingExchangeRateException(money.Currency, to).Message);
         }
 
         private bool CanConvert(Currency from, Currency to) =>
