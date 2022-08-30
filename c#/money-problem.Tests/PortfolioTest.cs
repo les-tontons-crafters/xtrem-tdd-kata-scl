@@ -23,39 +23,42 @@ public class PortfolioTest
     [Fact(DisplayName = "5 USD + 10 EUR = 17 USD")]
     public void Add_ShouldAddMoneyInDollarAndEuro() =>
         PortfolioWith(5d.Dollars(), 10d.Euros())
-            .EvaluateWithException(this.bank, Currency.USD)
+            .Evaluate(this.bank, Currency.USD)
+            .GetSuccessUnsafe()
             .Should()
             .Be(17d.Dollars());
 
     [Fact(DisplayName = "1 USD + 1100 KRW = 2200 KRW")]
     public void Add_ShouldAddMoneyInDollarAndKoreanWons() =>
         PortfolioWith(1d.Dollars(), 1100d.KoreanWons())
-            .EvaluateWithException(this.bank, Currency.KRW)
+            .Evaluate(this.bank, Currency.KRW)
+            .GetSuccessUnsafe()
             .Should()
             .Be(2200d.KoreanWons());
 
     [Fact(DisplayName = "5 USD + 10 EUR + 4 EUR = 21.8 USD")]
     public void Add_ShouldAddMoneyInDollarsAndMultipleAmountInEuros() =>
         PortfolioWith(5d.Dollars(), 10d.Euros(), 4d.Euros())
-            .EvaluateWithException(bank, Currency.USD)
+            .Evaluate(bank, Currency.USD)
+            .GetSuccessUnsafe()
             .Should()
             .Be(21.8.Dollars());
 
     [Fact(DisplayName = "Throws a MissingExchangeRatesException in case of missing exchange rates")]
-    public void Add_ShouldThrowAMissingExchangeRatesException()
-    {
+    public void Add_ShouldThrowAMissingExchangeRatesException() =>
         PortfolioWith(1d.Euros(), 1d.Dollars(), 1d.KoreanWons())
-                .Evaluate(this.bank, Currency.EUR)
-                .GetFailureUnsafe()
-                .Should().Be("Missing exchange rate(s): [USD->EUR],[KRW->EUR]");
-    }
+            .Evaluate(this.bank, Currency.EUR)
+            .GetFailureUnsafe()
+            .Should()
+            .Be("Missing exchange rate(s): [USD->EUR],[KRW->EUR]");
 
     [Fact(DisplayName = "5 USD + 10 USD = 15 USD")]
-    public void Add_ShouldAddMoneyInTheSameCurrency()
-    {
+    public void Add_ShouldAddMoneyInTheSameCurrency() =>
         PortfolioWith(5d.Dollars(), 10d.Dollars())
-            .EvaluateWithException(bank, Currency.USD).Should().Be(15d.Dollars());
-    }
+            .Evaluate(bank, Currency.USD)
+            .GetSuccessUnsafe()
+            .Should()
+            .Be(15d.Dollars());
 
     private static Portfolio PortfolioWith(params Money[] moneys) =>
         moneys.Aggregate(new Portfolio(), (portfolio, money) => portfolio.Add(money));
