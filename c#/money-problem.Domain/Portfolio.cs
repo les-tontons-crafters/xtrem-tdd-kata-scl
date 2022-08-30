@@ -16,11 +16,21 @@ public class Portfolio
         this.moneys = moneys.ToImmutableList();
     }
 
-    private static MissingExchangeRatesException ToException(IEnumerable<ConversionResult<MissingExchangeRateException>> results) =>
-        new(results
+    private static string ToFailureMessage(
+        IEnumerable<ConversionResult<MissingExchangeRateException>> results)
+    {
+        var missingExchangeRates = results
             .Where(result => result.IsFailure())
             .Select(result => result.GetFailureUnsafe())
-            .ToList());
+            .ToList();
+
+        return $"Missing exchange rate(s): {GetMissingRates(missingExchangeRates)}";
+    }
+    
+    private static string GetMissingRates(List<MissingExchangeRateException> missingRates) => missingRates
+        .Select(exception => $"[{exception.Message}]")
+        .Aggregate((r1, r2) => $"{r1},{r2}");
+        
 
     private static Money ToMoney(IEnumerable<ConversionResult<MissingExchangeRateException>> results, Currency currency) =>
         new(results.Sum(result => result.GetSuccessUnsafe().Amount), currency);
@@ -56,7 +66,7 @@ public class Portfolio
     {
         List<ConversionResult<MissingExchangeRateException>> results = this.GetConvertedMoneys(bank, currency);
         return ContainsFailure(results)
-            ? new ConversionResult<string>(ToException(results).Message)
+            ? new ConversionResult<string>(ToFailureMessage(results))
             : new ConversionResult<string>(ToMoney(results, currency));
     }
 }
