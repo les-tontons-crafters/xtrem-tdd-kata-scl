@@ -26,15 +26,15 @@ public class Portfolio
 
     private static MissingExchangeRatesException ToException(IEnumerable<ConversionResult<MissingExchangeRateException>> results) =>
         new(results
-            .Where(result => result.HasException())
-            .Select(result => result.GetExceptionUnsafe())
+            .Where(result => result.IsFailure())
+            .Select(result => result.GetFailureUnsafe())
             .ToList());
 
     private static Money ToMoney(IEnumerable<ConversionResult<MissingExchangeRateException>> results, Currency currency) =>
-        new(results.Sum(result => result.GetMoneyUnsafe().Amount), currency);
+        new(results.Sum(result => result.GetSuccessUnsafe().Amount), currency);
 
     private static bool ContainsFailure(IEnumerable<ConversionResult<MissingExchangeRateException>> results) =>
-        results.Any(result => result.HasException());
+        results.Any(result => result.IsFailure());
 
     private List<ConversionResult<MissingExchangeRateException>> GetConvertedMoneys(Bank bank, Currency currency) =>
         this.moneys
@@ -60,41 +60,41 @@ public class Portfolio
         return new Portfolio(updatedMoneys);
     }
 
-    public class ConversionResult<T> where T : Exception
+    public class ConversionResult<T>
     {
-        private readonly T? exception;
+        private readonly T? failure;
 
-        private readonly Money? money;
+        private readonly Money? success;
 
-        public ConversionResult(Money money)
+        public ConversionResult(Money success)
         {
-            this.money = money;
+            this.success = success;
         }
 
-        public ConversionResult(T exception)
+        public ConversionResult(T failure)
         {
-            this.exception = exception;
+            this.failure = failure;
         }
 
-        public bool HasMoney() => this.money != null;
+        public bool IsSuccess() => this.success != null;
 
-        public bool HasException() => this.exception != null;
+        public bool IsFailure() => this.failure != null;
 
-        public T GetExceptionUnsafe() => this.exception!;
+        public T GetFailureUnsafe() => this.failure!;
 
-        public Money GetMoneyUnsafe() => this.money!;
+        public Money GetSuccessUnsafe() => this.success!;
     }
 
-    public ConversionResult<MissingExchangeRatesException> Evaluate(Bank bank, Currency currency)
+    public ConversionResult<string> Evaluate(Bank bank, Currency currency)
     {
         try
         {
             var money = this.EvaluateWithException(bank, currency);
-            return new ConversionResult<MissingExchangeRatesException>(money);
+            return new ConversionResult<string>(money);
         }
         catch (MissingExchangeRatesException exception)
         {
-            return new ConversionResult<MissingExchangeRatesException>(exception);
+            return new ConversionResult<string>(exception.Message);
         }
     }
 }

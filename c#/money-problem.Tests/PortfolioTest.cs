@@ -46,8 +46,8 @@ public class PortfolioTest
     {
         PortfolioWith(1d.Euros(), 1d.Dollars(), 1d.KoreanWons())
                 .Evaluate(this.bank, Currency.EUR)
-                .GetExceptionUnsafe()
-                .Message.Should().Be("Missing exchange rate(s): [USD->EUR],[KRW->EUR]");
+                .GetFailureUnsafe()
+                .Should().Be("Missing exchange rate(s): [USD->EUR],[KRW->EUR]");
     }
 
     [Fact(DisplayName = "5 USD + 10 USD = 15 USD")]
