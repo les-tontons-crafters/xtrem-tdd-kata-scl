@@ -22,7 +22,7 @@ public final class Portfolio {
         return new Portfolio(updatedMoneys);
     }
 
-    public Money evaluate(Bank bank, Currency toCurrency) throws MissingExchangeRatesException {
+    public Money evaluateWithException(Bank bank, Currency toCurrency) throws MissingExchangeRatesException {
         var convertedMoneys = convertAllMoneys(bank, toCurrency);
 
         if (containsFailure(convertedMoneys)) {
@@ -63,16 +63,25 @@ public final class Portfolio {
         try {
             return new ConversionResult(bank.convert(money, toCurrency));
         } catch (MissingExchangeRateException missingExchangeRateException) {
-            return new ConversionResult(missingExchangeRateException);
+            return new ConversionResult(new MissingExchangeRatesException(missingExchangeRateException));
         }
     }
 
-    private record ConversionResult(Money money, MissingExchangeRateException missingExchangeRateException) {
+    public ConversionResult evaluate(Bank bank, Currency usd) {
+        try {
+            return new ConversionResult(evaluateWithException(bank, usd));
+        } catch (MissingExchangeRatesException e) {
+            return new ConversionResult(e);
+        }
+
+    }
+
+    private record ConversionResult(Money money, MissingExchangeRatesException missingExchangeRateException) {
         public ConversionResult(Money money) {
             this(money, null);
         }
 
-        public ConversionResult(MissingExchangeRateException missingExchangeRateException) {
+        public ConversionResult(MissingExchangeRatesException missingExchangeRateException) {
             this(null, missingExchangeRateException);
         }
 
@@ -82,6 +91,10 @@ public final class Portfolio {
 
         public boolean isSuccess() {
             return money != null;
+        }
+
+        public Money success() {
+            return money();
         }
     }
 }

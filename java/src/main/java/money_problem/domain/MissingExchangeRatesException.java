@@ -1,5 +1,6 @@
 package money_problem.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,5 +9,9 @@ public class MissingExchangeRatesException extends Exception {
         super(missingExchangeRates.stream()
                 .map(e -> String.format("[%s]", e.getMessage()))
                 .collect(Collectors.joining(",", "Missing exchange rate(s): ", "")));
+    }
+
+    public MissingExchangeRatesException(MissingExchangeRateException missingExchangeRateException) {
+        this(new ArrayList<MissingExchangeRateException>());
     }
 }
